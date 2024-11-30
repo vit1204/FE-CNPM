@@ -96,6 +96,7 @@ function Register() {
               </div>
 
               <button
+                onClick={handleRegist}
                 type="submit"
                 className="w-full px-4 py-2 text-white bg-primary rounded-lg"
               >
@@ -107,7 +108,7 @@ function Register() {
                   to="/"
                   className="font-medium text-primary hover:underline dark:text-primary-500"
                 >
-                  Sign in
+                  Sign up
                 </Link>
               </p>
             </form>
