@@ -1,34 +1,49 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 function Register() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [address, setAddress] = useState<string>("");
-  const history = useNavigate();
+  const [username, setUsername] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [age, setAge] = useState("");
+  const [role, setRole] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [name, setName] = useState<string>("");
+
+  const router = useNavigate();
 
   const handleRegist = async (event: React.FormEvent) => {
     event.preventDefault();
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/auth/register`,
-        {
-          email,
-          password,
-          address,
+    axios
+      .post(`http://localhost:8080/api/v1/auth/register`, {
+        email,
+        password,
+        name,
+        username,
+        phone,
+        role,
+        age: parseInt(age),
+        address,
+        gender,
+      })
+      .then((response) => {
+        if (response.data) {
+          toast.success("Regist success");
+          return router("/");
         }
-      );
-      if (response.status === 200) {
-        history("/home");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Regist failed");
+      });
   };
 
   return (
-    <section className="flex items-center justify-center h-screen bg-custom-gradient">
+    <section className="flex items-center justify-center pt-5 pb-5  bg-custom-gradient">
       <div className="w-full max-w-md">
         <div className="shadow-2xl rounded-lg bg-surface">
           <div className="p-6 space-y-4">
@@ -37,6 +52,102 @@ function Register() {
             </h1>
 
             <form onSubmit={handleRegist} className="space-y-4">
+              <div className="form-group">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-secondary"
+                >
+                  Name
+                </label>
+                <input
+                  type="name"
+                  name="name"
+                  placeholder="Enter your name"
+                  className="w-full p-2.5 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+                  onKeyUp={(e) => e.key === "Enter" && handleRegist(e)}
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="gender"
+                  className="block mb-2 text-sm font-medium text-black"
+                >
+                  Gender
+                </label>
+                <select
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  name=""
+                  className="w-full p-2.5 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+                  id=""
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Khac">Khac</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="gender"
+                  className="block mb-2 text-sm font-medium text-black"
+                >
+                  Role
+                </label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  name=""
+                  className="bg-w-full p-2.5 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+                  id=""
+                >
+                  <option value="Manager">Manager</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Customer">Customer</option>
+                  <option value="Staff">Staff</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label
+                  htmlFor="phone"
+                  className="block mb-2 text-sm font-medium text-secondary"
+                >
+                  Phone
+                </label>
+                <input
+                  type="number"
+                  name="phone"
+                  placeholder="Enter your phone"
+                  className="w-full p-2.5 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+                  onKeyUp={(e) => e.key === "Enter" && handleRegist(e)}
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label
+                  htmlFor="age"
+                  className="block mb-2 text-sm font-medium text-secondary"
+                >
+                  Age
+                </label>
+                <input
+                  type="number"
+                  name="age"
+                  placeholder="Enter your age"
+                  className="w-full p-2.5 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+                  onKeyUp={(e) => e.key === "Enter" && handleRegist(e)}
+                  required
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                />
+              </div>
+
               <div className="form-group">
                 <label
                   htmlFor="address"
@@ -77,6 +188,25 @@ function Register() {
               </div>
               <div className="form-group">
                 <label
+                  htmlFor="username"
+                  className="block mb-2 text-sm font-medium text-secondary"
+                >
+                  Username
+                </label>
+                <input
+                  type="username"
+                  name="username"
+                  id="password"
+                  placeholder="Enter your username"
+                  className="w-full p-2.5 rounded-lg focus:ring-primary-600 focus:border-primary-600"
+                  onKeyUp={(e) => e.key === "Enter" && handleRegist(e)}
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-secondary"
                 >
@@ -102,6 +232,7 @@ function Register() {
               >
                 Sign up
               </button>
+              <Toaster position="top-right" reverseOrder={false} />
               <p className="text-sm font-light text-secondary">
                 Already have an account?{" "}
                 <Link
@@ -112,6 +243,7 @@ function Register() {
                 </Link>
               </p>
             </form>
+            <Toaster />
           </div>
         </div>
       </div>

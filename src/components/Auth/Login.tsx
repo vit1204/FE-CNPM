@@ -4,30 +4,38 @@ import Images from "../../constants/image.js";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 function Login() {
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useNavigate();
 
-  const handleLogin = async (event: React.FormEvent) => {
+  const handleLogin = (event: React.FormEvent) => {
     event.preventDefault();
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/auth/login`,
-        {
-          email,
-          password,
+    axios
+      .post(`http://localhost:8080/api/v1/auth/login`, {
+        username,
+        password,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          const accessToken = response.data.data;
+          localStorage.setItem("accessToken", accessToken);
+          toast.success("Login success", {
+            duration: 3000,
+            position: "top-right",
+          });
+          return router("/home");
         }
-      );
-      if (response.status === 200) {
-        const accesToken = response.data.result.accessToken;
-        localStorage.setItem("accessToken", accesToken);
-        router("/home");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Invalid username or password", {
+          duration: 3000,
+          position: "top-right",
+        });
+      });
   };
   return (
     <div className="container_wrapper">
@@ -36,10 +44,10 @@ function Login() {
           <form action="home.html">
             <h1 className="text-2xl ">SIGN IN</h1>
             <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               type="text"
-              placeholder="Name"
+              placeholder="Username"
             />
             <input
               value={password}
@@ -61,15 +69,32 @@ function Login() {
                 margin: 0,
               }}
             >
-              <p> Don't have an account? Register</p>
+              <p>
+                {" "}
+                Don't have an account?{" "}
+                <span className="text-blue-500 p-0 m-0">Register</span>{" "}
+              </p>
+            </Link>
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "black",
+                padding: 0,
+                margin: 0,
+              }}
+              to="/forgot-password"
+            >
+              <p>Forgot password?</p>
             </Link>
             <button onClick={handleLogin}>Login</button>
+            <Toaster position="top-right" reverseOrder={false} />
           </form>
         </div>
         <div className="toggle-container">
           <img src={Images.loginAva} alt="" />
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }
