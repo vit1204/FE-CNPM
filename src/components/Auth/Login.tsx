@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
   const [username, setUsername] = useState<string>("");
@@ -21,12 +22,22 @@ function Login() {
       .then((response) => {
         if (response.status === 200) {
           const accessToken = response.data.data;
+          const decodeToken = jwtDecode(accessToken);
+          const role = decodeToken.role;
+
           localStorage.setItem("accessToken", accessToken);
           toast.success("Login success", {
             duration: 3000,
             position: "top-right",
           });
-          return router("/home");
+          if (
+            role.toLowerCase() === "admin" ||
+            role.toLowerCase() === "manager"
+          ) {
+            return router("/home");
+          } else {
+            return router("/userHome");
+          }
         }
       })
       .catch((error) => {
@@ -87,14 +98,13 @@ function Login() {
               <p>Forgot password?</p>
             </Link>
             <button onClick={handleLogin}>Login</button>
-            <Toaster position="top-right" reverseOrder={false} />
           </form>
         </div>
         <div className="toggle-container">
           <img src={Images.loginAva} alt="" />
         </div>
       </div>
-      <Toaster />
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 }

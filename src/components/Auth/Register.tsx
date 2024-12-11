@@ -10,7 +10,6 @@ function Register() {
   const [username, setUsername] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [age, setAge] = useState("");
-  const [role, setRole] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [name, setName] = useState<string>("");
 
@@ -25,7 +24,6 @@ function Register() {
         name,
         username,
         phone,
-        role,
         age: parseInt(age),
         address,
         gender,
@@ -87,27 +85,6 @@ function Register() {
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Khac">Khac</option>
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="gender"
-                  className="block mb-2 text-sm font-medium text-black"
-                >
-                  Role
-                </label>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  name=""
-                  className="bg-w-full p-2.5 rounded-lg focus:ring-primary-600 focus:border-primary-600"
-                  id=""
-                >
-                  <option value="Manager">Manager</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Customer">Customer</option>
-                  <option value="Staff">Staff</option>
                 </select>
               </div>
 

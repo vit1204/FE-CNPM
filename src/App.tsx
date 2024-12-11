@@ -10,6 +10,9 @@ import Register from "./components/Auth/Register";
 import Home from "./components/Home/Home";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
+import UserProfile from "./components/UserProfile";
+import CreateUser from "./components/CreateUser";
+import UserHome from "./components/Home/UserHome";
 
 function App() {
   return (
@@ -22,6 +25,9 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
+          <Route path="/user/:id_user" element={<UserProfile />} />
+          <Route path="/user/create" element={<CreateUser />} />
+          <Route path="/userHome" element={<UserHome />} />
         </Routes>
       </Router>
     </>
